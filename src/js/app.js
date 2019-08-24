@@ -34,7 +34,7 @@ class App {
                 `;
 
                     cardDeck.appendChild(cardEl);
-                    cardEl.addEventListener('click', (ev) => {
+                    cardEl.addEventListener('click' || 'touchstart', (ev) => {
                         ev.preventDefault();
                         this.viewItem(o);
                     })

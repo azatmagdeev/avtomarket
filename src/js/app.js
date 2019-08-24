@@ -11,8 +11,13 @@ class App {
 
     init() {
 
+      this.rootEl.innerHTML = `    <div class="mt-3">
+                    <b><h4>Новые объявления:</h4> </b></div>
+                <div class="card-deck" id=""> </div>`;
+      const cardDeck = document.querySelector('.card-deck');
+
         this.ads.getItems(items => {
-            items.map(o => {
+            items.reverse().map(o => {
                     const cardEl = document.createElement('div');
                     cardEl.innerHTML = `
                   <div class="card mt-3 " style="width: 18rem;">
@@ -27,8 +32,10 @@ class App {
                         </div>
                     </div>
                 `;
-                    this.rootEl.appendChild(cardEl);
-                    cardEl.addEventListener('click', () => {
+
+                    cardDeck.appendChild(cardEl);
+                    cardEl.addEventListener('click', (ev) => {
+                        ev.preventDefault();
                         this.viewItem(o);
                     })
 
@@ -38,8 +45,43 @@ class App {
     }
 
     viewItem(o) {
-        console.log(o);
+        console.log(
+           formateDate(o.date)
+            );
+
+        this.ads.getSellers(sellers=>{
+            console.log('sellers',sellers);
+            const seller = sellers.filter(seller => seller.id === o.sellerId)[0];
+            console.log('seller',seller);
+            this.rootEl.textContent ='';
+            this.rootEl.innerHTML = `
+            <button class="btn btn-primary mt-3" id="backBtn"><- Назад</button>
+            <h3 class="">${o.brand} ${o.model}, ${o.year}</h3>
+            <img class="mt-3" width="100%" src=${o.photos[0]}>
+            <table class="mt-3">
+             <tr><td>Марка:</td><td>${o.brand}</td></tr>
+            <tr><td>Модель:</td><td>${o.model}</td></tr>
+            <tr><td>Год выпуска:</td><td>${o.year}</td></tr>
+            <tr><td>Пробег:</td><td>${o.km}</td></tr>
+            <tr><td>Коробка:</td><td>${o.gearbox}</td></tr>
+            </table>
+            <h3 class="mt-3" style="color: blue">Цена: <b>${o.price} руб.</b></h3>
+            <p>${o.text}</p>
+            <p class="mt-3"><h5>Продавец: ${seller.name}</h5></p>
+            <button class="btn btn-primary" id="callSeller">Позвонить продавцу</button>
+            <button class="btn btn-outline-secondary" id="smsSeller">Написать сообщение</button>
+            <p class="mt-3">${formateDate(o.date)}</p>
+            `;
+            const backBtn = document.getElementById('backBtn');
+            backBtn.addEventListener('click',()=>{this.init()})
+        });
+
     }
 }
 
 const app = new App(document.getElementById('root'), ads);
+
+function formateDate(i){
+    const date = new Date(i);
+    return `размещено ${date.getDate()}.${date.getMonth()}.${date.getFullYear()} в ${date.getHours()}:${date.getMinutes()}.`
+}

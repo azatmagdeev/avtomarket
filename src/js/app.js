@@ -3,18 +3,22 @@ import {Ads} from "./lib.js";
 const ads = new Ads();
 
 class App {
-    constructor(rootEl, ads) {
+    constructor(rootEl, ads, addBtn) {
         this.rootEl = rootEl;
         this.ads = ads;
-        this.init()
+        this.init();
+        this.addBtn = addBtn;
+        this.addBtn.addEventListener('click', () => {
+            this.addNewAd()
+        })
     }
 
     init() {
 
-      this.rootEl.innerHTML = `    <div class="mt-3">
+        this.rootEl.innerHTML = `    <div class="mt-3">
                     <b><h4>Новые объявления:</h4> </b></div>
                 <div class="card-deck" id=""> </div>`;
-      const cardDeck = document.querySelector('.card-deck');
+        const cardDeck = document.querySelector('.card-deck');
 
         this.ads.getItems(items => {
             items.reverse().map(o => {
@@ -27,7 +31,7 @@ class App {
                             <a href="#" class=""><h5 class="card-title">${o.brand} ${o.model}, ${o.year}</h5></a>
                             <p class="card-text"><b>${o.price} руб.</b></p>
                             <p class="card-text">Казань</p>
-                            <p class="card-text">${o.date}</p>
+<!--                            <p class="card-text">${o.date}</p>-->
 
                         </div>
                     </div>
@@ -39,6 +43,7 @@ class App {
                         this.viewItem(o);
                     })
 
+
                 }
             )
         });
@@ -46,14 +51,13 @@ class App {
 
     viewItem(o) {
         console.log(
-           formateDate(o.date)
-            );
-
-        this.ads.getSellers(sellers=>{
-            console.log('sellers',sellers);
+            formateDate(o.date)
+        );
+        this.ads.getSellers(sellers => {
+            console.log('sellers', sellers);
             const seller = sellers.filter(seller => seller.id === o.sellerId)[0];
-            console.log('seller',seller);
-            this.rootEl.textContent ='';
+            console.log('seller', seller);
+            this.rootEl.textContent = '';
             this.rootEl.innerHTML = `
             <button class="btn btn-primary mt-3" id="backBtn"><- Назад</button>
             <h3 class="">${o.brand} ${o.model}, ${o.year}</h3>
@@ -73,15 +77,34 @@ class App {
             <p class="mt-3">${formateDate(o.date)}</p>
             `;
             const backBtn = document.getElementById('backBtn');
-            backBtn.addEventListener('click',()=>{this.init()})
+            backBtn.addEventListener('click', () => {
+                this.init()
+            })
         });
 
     }
+
+    addNewAd() {
+        console.log('button works!');
+        this.rootEl.innerHTML = `
+        <form class='form'>
+        <select name="brand" id="brand">
+            <option value=""></option>
+            <option value=""></option>
+            <option value=""></option>
+        </select>
+        <select name="model" id="model">
+        
+        </select>
+        <input type="text">
+        </form>
+        `;
+    }
 }
 
-const app = new App(document.getElementById('root'), ads);
+const app = new App(document.getElementById('root'), ads, document.getElementById('addBtn'));
 
-function formateDate(i){
+function formateDate(i) {
     const date = new Date(i);
     return `размещено ${date.getDate()}.${date.getMonth()}.${date.getFullYear()} в ${date.getHours()}:${date.getMinutes()}.`
 }

@@ -10,11 +10,19 @@ class App {
         this.addBtn = addBtn;
         this.addBtn.addEventListener('click', () => {
             this.addNewAd()
-        })
+        });
+
     }
 
     init() {
+        // todo: parse current url
 
+        this.viewLastAds()
+
+
+    }
+
+    viewLastAds(){
         this.rootEl.innerHTML = `    <div class="mt-3">
                     <b><h4>Новые объявления:</h4> </b></div>
                 <div class="card-deck" id=""> </div>`;
@@ -50,9 +58,10 @@ class App {
     }
 
     viewItem(o) {
-        console.log(
-            formateDate(o.date)
-        );
+        // history.pushState(null, 'детали', '/details.html');
+        // console.log(
+        //     formateDate(o.date)
+        // );
         this.ads.getSellers(sellers => {
             console.log('sellers', sellers);
             const seller = sellers.filter(seller => seller.id === o.sellerId)[0];
@@ -72,13 +81,18 @@ class App {
             <h3 class="mt-3" style="color: blue">Цена: <b>${o.price} руб.</b></h3>
             <p>${o.text}</p>
             <p class="mt-3"><h5>Продавец: ${seller.name}</h5></p>
-            <button class="btn btn-primary" id="callSeller">Позвонить продавцу</button>
+            <button class="btn btn-primary" id="showPhone">Показать телефон</button>
             <button class="btn btn-outline-secondary" id="smsSeller">Написать сообщение</button>
             <p class="mt-3">${formateDate(o.date)}</p>
             `;
             const backBtn = document.getElementById('backBtn');
             backBtn.addEventListener('click', () => {
                 this.init()
+            });
+            const showPhone = document.getElementById('showPhone');
+            showPhone.addEventListener('click',()=>{
+                showPhone.innerHTML = `<b>${seller.phoneNumber}</b>`;
+                showPhone.className = 'btn btn-outline-secondary';
             })
         });
 
@@ -89,9 +103,9 @@ class App {
         this.rootEl.innerHTML = `
         <form class='form'>
         <select name="brand" id="brand">
-            <option value=""></option>
-            <option value=""></option>
-            <option value=""></option>
+            <option value="Lada">Lada</option>
+            <option value="Renault">Renault</option>
+            <option value="Mazda">Mazda</option>
         </select>
         <select name="model" id="model">
         

@@ -26,3 +26,8 @@ export class Ads{
         xhr.send();
     }
 }
+
+export function formateDate(i) {
+    const date = new Date(i);
+    return `размещено ${date.getDate()}.${date.getMonth()}.${date.getFullYear()} в ${date.getHours()}:${date.getMinutes()}.`
+}

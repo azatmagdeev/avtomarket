@@ -1,60 +1,48 @@
-import {Ads} from "./lib.js";
+import {Ads, formateDate} from "./lib.js";
 
 const ads = new Ads();
 
 class App {
-    constructor(rootEl, ads, addBtn) {
-        this.rootEl = rootEl;
+    constructor(ads, rootEl, addBtn, searchEl) {
+
         this.ads = ads;
-        this.init();
+        this.rootEl = rootEl;
+        this.searchEl = searchEl;
+
+
         this.addBtn = addBtn;
         this.addBtn.addEventListener('click', () => {
             this.addNewAd()
         });
 
+        this.init();
     }
 
     init() {
         // todo: parse current url
 
-        this.viewLastAds()
+
+        this.ads.getItems(items => {
+            this.viewLastAds(items);
+
+            this.searchEl.addEventListener('change', () => {
+                this.searchItems(this.searchEl.value, items)
+
+            });
+        });
 
 
     }
 
-    viewLastAds(){
+    viewLastAds(items) {
         this.rootEl.innerHTML = `    <div class="mt-3">
                     <b><h4>Новые объявления:</h4> </b></div>
                 <div class="card-deck" id=""> </div>`;
         const cardDeck = document.querySelector('.card-deck');
 
-        this.ads.getItems(items => {
-            items.reverse().map(o => {
-                    const cardEl = document.createElement('div');
-                    cardEl.innerHTML = `
-                  <div class="card mt-3 " style="width: 18rem;">
-                        <img class="card-img-top" src=${o.photos[0]} alt="Card image cap" width="286 px" height="215 px">
-                        <div class="card-body">
-
-                            <a href="#" class=""><h5 class="card-title">${o.brand} ${o.model}, ${o.year}</h5></a>
-                            <p class="card-text"><b>${o.price} руб.</b></p>
-                            <p class="card-text">Казань</p>
-<!--                            <p class="card-text">${o.date}</p>-->
-
-                        </div>
-                    </div>
-                `;
-
-                    cardDeck.appendChild(cardEl);
-                    cardEl.addEventListener('click' || 'touchstart', (ev) => {
-                        ev.preventDefault();
-                        this.viewItem(o);
-                    })
+        this.viewCardDeck(items.reverse(), cardDeck);
 
 
-                }
-            )
-        });
     }
 
     viewItem(o) {
@@ -90,7 +78,7 @@ class App {
                 this.init()
             });
             const showPhone = document.getElementById('showPhone');
-            showPhone.addEventListener('click',()=>{
+            showPhone.addEventListener('click', () => {
                 showPhone.innerHTML = `<b>${seller.phoneNumber}</b>`;
                 showPhone.className = 'btn btn-outline-secondary';
             })
@@ -114,11 +102,70 @@ class App {
         </form>
         `;
     }
+
+    searchItems(string, items) {
+        string = string.toLowerCase();
+        console.log('search', string);
+        const re = new RegExp(string);
+        console.log(re);
+        let filteredItems = [];
+        items.map(o => {
+            const obj = `${o.brand} ${o.model} ${o.year} ${o.text}`.toLowerCase();
+            // console.log(typeof obj);
+            const searchedItems = re.exec(obj);
+            console.log(searchedItems);
+            if (searchedItems !== null) {
+                filteredItems.push(o)
+            }
+            console.log(filteredItems);
+        });
+
+        this.rootEl.innerHTML = `    <div class="mt-3">
+                    <b><h4>Результаты поиска:</h4> </b></div>
+                <div class="card-deck" id=""> </div>`;
+        const cardDeck = document.querySelector('.card-deck');
+
+        this.viewCardDeck(filteredItems, cardDeck);
+
+    }
+
+    viewCardDeck(items, cardDeck) {
+
+        if (items.length === 0) {
+            this.rootEl.innerHTML = `Ничего не найдено :(`
+        } else {
+            items.map(o => {
+                    const cardEl = document.createElement('div');
+                    cardEl.innerHTML = `
+                  <div class="card mt-3 " style="width: 18rem;">
+                        <img class="card-img-top" src=${o.photos[0]} alt="Card image cap" width="286 px" height="215 px">
+                        <div class="card-body">
+
+                            <a href="#" class=""><h5 class="card-title">${o.brand} ${o.model}, ${o.year}</h5></a>
+                            <p class="card-text"><b>${o.price} руб.</b></p>
+                            <p class="card-text">Казань</p>
+<!--                            <p class="card-text">${o.date}</p>-->
+
+                        </div>
+                    </div>
+                `;
+
+                    cardDeck.appendChild(cardEl);
+                    cardEl.addEventListener('click' || 'touchstart', (ev) => {
+                        ev.preventDefault();
+                        this.viewItem(o);
+                    })
+
+
+                }
+            )
+        }
+    }
 }
 
-const app = new App(document.getElementById('root'), ads, document.getElementById('addBtn'));
+const app = new App(ads,
+    document.getElementById('root'),
+    document.getElementById('addBtn'),
+    document.getElementById('search'),
+);
 
-function formateDate(i) {
-    const date = new Date(i);
-    return `размещено ${date.getDate()}.${date.getMonth()}.${date.getFullYear()} в ${date.getHours()}:${date.getMinutes()}.`
-}

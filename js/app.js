@@ -9,7 +9,6 @@ class App {
         this.rootEl = rootEl;
         this.searchEl = searchEl;
 
-
         this.addBtn = addBtn;
         this.addBtn.addEventListener('click', () => {
             this.addNewAd()
@@ -22,14 +21,17 @@ class App {
         // todo: parse current url
 
 
-        this.ads.getItems(items => {
+        this.rootEl.innerHTML = `<img src="img/loading.gif" alt="Загрузка...">`;
+        setTimeout( this.ads.getItems(items => {
             this.viewLastAds(items);
 
             this.searchEl.addEventListener('change', () => {
+                this.rootEl.innerHTML = `<img src="img/loading.gif" alt="Загрузка...">`;
                 this.searchItems(this.searchEl.value, items)
 
             });
-        });
+        }),1000);
+
 
 
     }

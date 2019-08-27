@@ -155,7 +155,9 @@ class App {
                     cardDeck.appendChild(cardEl);
                     cardEl.addEventListener('click' || 'touchstart', (ev) => {
                         ev.preventDefault();
-                        this.viewItem(o);
+                        this.rootEl.innerHTML = `<img src="img/loading.gif" width="100%" alt="Загрузка...">`;
+                        setTimeout(()=>{this.viewItem(o)},300)
+
                     })
 
 

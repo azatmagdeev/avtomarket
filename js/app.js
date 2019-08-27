@@ -21,14 +21,13 @@ class App {
         // todo: parse current url
 
 
-        this.rootEl.innerHTML = `<img src="img/loading.gif" alt="Загрузка...">`;
+        this.rootEl.innerHTML = `<img src="img/loading.gif" width="100%" alt="Загрузка...">`;
         setTimeout( this.ads.getItems(items => {
             this.viewLastAds(items);
 
             this.searchEl.addEventListener('change', () => {
-                this.rootEl.innerHTML = `<img src="img/loading.gif" alt="Загрузка...">`;
-                this.searchItems(this.searchEl.value, items)
-
+                this.rootEl.innerHTML = `<img src="img/loading.gif" width="100%" alt="Загрузка...">`;
+                setTimeout(()=>{this.searchItems(this.searchEl.value, items)},1000)
             });
         }),1000);
 
@@ -39,6 +38,7 @@ class App {
     viewLastAds(items) {
         this.rootEl.innerHTML = `    <div class="mt-3">
                     <b><h4>Новые объявления:</h4> </b></div>
+                    <p>Всего объявлений: ${items.length}</p>
                 <div class="card-deck" id=""> </div>`;
         const cardDeck = document.querySelector('.card-deck');
 
@@ -123,7 +123,7 @@ class App {
         });
 
         this.rootEl.innerHTML = `    <div class="mt-3">
-                    <b><h4>Результаты поиска:</h4> </b></div>
+                    <b><h4>Результаты поиска: ${filteredItems.length}</h4> </b></div>
                 <div class="card-deck" id=""> </div>`;
         const cardDeck = document.querySelector('.card-deck');
 
@@ -134,7 +134,7 @@ class App {
     viewCardDeck(items, cardDeck) {
 
         if (items.length === 0) {
-            this.rootEl.innerHTML = `Ничего не найдено :(`
+            cardDeck.innerHTML =`Ничего не найдено ¯\\_(ツ)_/¯ `;
         } else {
             items.map(o => {
                     const cardEl = document.createElement('div');

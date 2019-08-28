@@ -26,10 +26,7 @@ class App {
 
         loading(this.rootEl);
         setTimeout(this.ads.getItems(items => {
-            window.onpopstate = (ev) => {
-                this.viewLastAds(ev.state)
-            };
-            history.pushState(items, 'Новые объявления', 'index.html');
+
             this.viewLastAds(items);
 
             this.searchEl.addEventListener('input', () => {
@@ -41,7 +38,7 @@ class App {
                     history.pushState({
                         string: this.searchEl.value,
                         items: items
-                    }, `${this.searchEl.value}`, `${this.searchEl.value}.html`);
+                    }, `${this.searchEl.value}`, `${this.searchEl.value}`);
                     this.searchItems(this.searchEl.value, items)
                 }, 1000)
             });
@@ -52,6 +49,10 @@ class App {
 
     viewLastAds(items) {
 
+        window.onpopstate = (ev) => {
+            this.viewLastAds(ev.state)
+        };
+        history.pushState(items, 'Новые объявления', 'index.html');
 
         // console.log(history.state);
         this.rootEl.innerHTML = `    <div class="mt-3">
@@ -66,6 +67,9 @@ class App {
     }
 
     viewItem(o) {
+        // window.onpopstate = ev =>{
+        //     this.viewItem(ev.state)
+        // };
         history.pushState(o, `${o.brand} ${o.model}, ${o.year}`, `${o.brand}${o.model}${o.year}.html`);
         // console.log(history.state);
 
@@ -75,7 +79,7 @@ class App {
             // console.log('seller', seller);
             this.rootEl.textContent = '';
             this.rootEl.innerHTML = `
-            <button class="btn btn-primary mt-3" id="backBtn"><- Назад</button>
+<!--            <button class="btn btn-primary mt-3" id="backBtn"><- Назад</button>-->
             <h3 class="">${o.brand} ${o.model}, ${o.year}</h3>
             <img class="mt-3" width="100%" src=${o.photos[0]}>
             <table class="mt-3">
@@ -108,7 +112,7 @@ class App {
 
     searchItems(string, items) {
         if (string === '') {
-            this.viewLastAds(items)
+         return this.viewLastAds(items)
         }
         string = string.toLowerCase();
         console.log('search', string);
@@ -119,11 +123,11 @@ class App {
             const obj = `${o.brand} ${o.model} ${o.year} ${o.text}`.toLowerCase();
             // console.log(typeof obj);
             const searchedItems = re.exec(obj);
-            console.log(searchedItems);
+            // console.log(searchedItems);
             if (searchedItems !== null) {
                 filteredItems.push(o)
             }
-            console.log(filteredItems);
+            // console.log(filteredItems);
         });
 
 

@@ -1,5 +1,10 @@
 import {Ads, formateDate, loading} from "./lib.js";
 
+console.log(location);
+// if (window.location !== '') {
+//     window.location = ''
+// }
+
 const ads = new Ads();
 
 class App {
@@ -21,11 +26,22 @@ class App {
 
         loading(this.rootEl);
         setTimeout(this.ads.getItems(items => {
+            window.onpopstate = (ev) => {
+                this.viewLastAds(ev.state)
+            };
+            history.pushState(items, 'Новые объявления', 'index.html');
             this.viewLastAds(items);
 
             this.searchEl.addEventListener('input', () => {
                 loading(this.rootEl);
                 setTimeout(() => {
+                    window.onpopstate = ev => {
+                        this.searchItems(ev.state.string, ev.state.items)
+                    };
+                    history.pushState({
+                        string: this.searchEl.value,
+                        items: items
+                    }, `${this.searchEl.value}`, `${this.searchEl.value}.html`);
                     this.searchItems(this.searchEl.value, items)
                 }, 1000)
             });
@@ -35,7 +51,6 @@ class App {
     }
 
     viewLastAds(items) {
-        history.pushState(null,'Новые объявления','');
 
 
         // console.log(history.state);
@@ -51,13 +66,13 @@ class App {
     }
 
     viewItem(o) {
-        history.pushState(null, `${o.brand} ${o.model}, ${o.year}`, `${o.brand}${o.model}${o.year}.html`);
+        history.pushState(o, `${o.brand} ${o.model}, ${o.year}`, `${o.brand}${o.model}${o.year}.html`);
         // console.log(history.state);
 
         this.ads.getSellers(sellers => {
-            console.log('sellers', sellers);
+            // console.log('sellers', sellers);
             const seller = sellers.filter(seller => seller.id === o.sellerId)[0];
-            console.log('seller', seller);
+            // console.log('seller', seller);
             this.rootEl.textContent = '';
             this.rootEl.innerHTML = `
             <button class="btn btn-primary mt-3" id="backBtn"><- Назад</button>
@@ -92,6 +107,9 @@ class App {
 
 
     searchItems(string, items) {
+        if (string === '') {
+            this.viewLastAds(items)
+        }
         string = string.toLowerCase();
         console.log('search', string);
         const re = new RegExp(string);
@@ -107,6 +125,7 @@ class App {
             }
             console.log(filteredItems);
         });
+
 
         this.rootEl.innerHTML = `    <div class="mt-3">
                     <b><h4>Результаты поиска: ${filteredItems.length}</h4> </b></div>
@@ -180,24 +199,24 @@ class App {
             a.addEventListener('click', ev => {
                 ev.preventDefault();
                 modelEl.innerHTML = '';
-                this.selectModel(brand,modelEl)
+                this.selectModel(brand, modelEl)
             })
         })
 
     }
 
-    selectModel(brand,modelEl) {
+    selectModel(brand, modelEl) {
         console.log(brand);
 
 
-        brand.models.map(model =>{
+        brand.models.map(model => {
             const li = document.createElement('li');
             modelEl.appendChild(li);
             const a = document.createElement('a');
-            a.href='#';
+            a.href = '#';
             li.appendChild(a);
             a.textContent = `${model}`;
-            a.addEventListener('click',ev => {
+            a.addEventListener('click', ev => {
                 ev.preventDefault();
 
             })
@@ -226,8 +245,10 @@ const toyota = {
     name: "Toyota",
     models: ['Corola', 'Camry', 'Rav4']
 };
-const bmw = {name:"BMW",
-models:['X1','X3','X5','X6']};
+const bmw = {
+    name: "BMW",
+    models: ['X1', 'X3', 'X5', 'X6']
+};
 
 const brands = [audi, bmw, citroen, lada, subaru, toyota];
 

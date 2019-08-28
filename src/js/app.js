@@ -23,7 +23,7 @@ class App {
         setTimeout(this.ads.getItems(items => {
             this.viewLastAds(items);
 
-            this.searchEl.addEventListener('change', () => {
+            this.searchEl.addEventListener('input', () => {
                 loading(this.rootEl);
                 setTimeout(() => {
                     this.searchItems(this.searchEl.value, items)
@@ -35,6 +35,10 @@ class App {
     }
 
     viewLastAds(items) {
+        history.pushState(null,'Новые объявления','');
+
+
+        console.log(history.state);
         this.rootEl.innerHTML = `    <div class="mt-3">
                     <b><h4>Новые объявления:</h4> </b></div>
                     <p>Всего объявлений: ${items.length}</p>
@@ -46,11 +50,10 @@ class App {
 
     }
 
-    viewItem(o, from) {
-        // history.pushState(null, 'детали', '/details.html');
-        // console.log(
-        //     formateDate(o.date)
-        // );
+    viewItem(o) {
+        history.pushState(stateObj, `${o.brand} ${o.model}, ${o.year}`, `${o.brand}${o.model}${o.year}.html`);
+        console.log(history.state);
+
         this.ads.getSellers(sellers => {
             console.log('sellers', sellers);
             const seller = sellers.filter(seller => seller.id === o.sellerId)[0];

@@ -38,7 +38,7 @@ class App {
         history.pushState(null,'Новые объявления','');
 
 
-        console.log(history.state);
+        // console.log(history.state);
         this.rootEl.innerHTML = `    <div class="mt-3">
                     <b><h4>Новые объявления:</h4> </b></div>
                     <p>Всего объявлений: ${items.length}</p>
@@ -51,8 +51,8 @@ class App {
     }
 
     viewItem(o) {
-        history.pushState(stateObj, `${o.brand} ${o.model}, ${o.year}`, `${o.brand}${o.model}${o.year}.html`);
-        console.log(history.state);
+        history.pushState(null, `${o.brand} ${o.model}, ${o.year}`, `${o.brand}${o.model}${o.year}.html`);
+        // console.log(history.state);
 
         this.ads.getSellers(sellers => {
             console.log('sellers', sellers);

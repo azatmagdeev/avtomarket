@@ -1,36 +1,35 @@
-import {Ads, formateDate} from "./lib.js";
+import {Ads, formateDate, loading} from "./lib.js";
 
 const ads = new Ads();
 
 class App {
     constructor(ads, rootEl, addBtn, searchEl) {
-
         this.ads = ads;
         this.rootEl = rootEl;
         this.searchEl = searchEl;
-
         this.addBtn = addBtn;
         this.addBtn.addEventListener('click', () => {
             this.addNewAd()
         });
-
         this.init();
     }
+
 
     init() {
         // todo: parse current url
 
 
-        this.rootEl.innerHTML = `<img src="img/loading.gif" width="100%" alt="Загрузка...">`;
-        setTimeout( this.ads.getItems(items => {
+        loading(this.rootEl);
+        setTimeout(this.ads.getItems(items => {
             this.viewLastAds(items);
 
             this.searchEl.addEventListener('change', () => {
-                this.rootEl.innerHTML = `<img src="img/loading.gif" width="100%" alt="Загрузка...">`;
-                setTimeout(()=>{this.searchItems(this.searchEl.value, items)},1000)
+                loading(this.rootEl);
+                setTimeout(() => {
+                    this.searchItems(this.searchEl.value, items)
+                }, 1000)
             });
-        }),1000);
-
+        }), 1000);
 
 
     }
@@ -47,7 +46,7 @@ class App {
 
     }
 
-    viewItem(o) {
+    viewItem(o, from) {
         // history.pushState(null, 'детали', '/details.html');
         // console.log(
         //     formateDate(o.date)
@@ -88,22 +87,6 @@ class App {
 
     }
 
-    addNewAd() {
-        console.log('button works!');
-        this.rootEl.innerHTML = `
-        <form class='form'>
-        <select name="brand" id="brand">
-            <option value="Lada">Lada</option>
-            <option value="Renault">Renault</option>
-            <option value="Mazda">Mazda</option>
-        </select>
-        <select name="model" id="model">
-        
-        </select>
-        <input type="text">
-        </form>
-        `;
-    }
 
     searchItems(string, items) {
         string = string.toLowerCase();
@@ -134,7 +117,7 @@ class App {
     viewCardDeck(items, cardDeck) {
 
         if (items.length === 0) {
-            cardDeck.innerHTML =`Ничего не найдено ¯\\_(ツ)_/¯ `;
+            cardDeck.innerHTML = `Ничего не найдено ¯\\_(ツ)_/¯ `;
         } else {
             items.map(o => {
                     const cardEl = document.createElement('div');
@@ -155,8 +138,10 @@ class App {
                     cardDeck.appendChild(cardEl);
                     cardEl.addEventListener('click' || 'touchstart', (ev) => {
                         ev.preventDefault();
-                        this.rootEl.innerHTML = `<img src="img/loading.gif" width="100%" alt="Загрузка...">`;
-                        setTimeout(()=>{this.viewItem(o)},300)
+                        loading(this.rootEl);
+                        setTimeout(() => {
+                            this.viewItem(o)
+                        }, 100)
 
                     })
 
@@ -165,11 +150,89 @@ class App {
             )
         }
     }
+
+    addNewAd() {
+        console.log('button works!');
+
+        this.rootEl.innerHTML = `<h4>Новое объявление</h4>
+            
+            <div class="container">
+            <div class="row">
+            <div class="col"><p>Выберите марку <ul id="brand"></ul></p></div>
+            <div class="col" <p>Выберите модель <ul id="model"></ul></p></div>
+            </div>
+            </div>
+
+            `;
+        const brandEl = document.getElementById('brand');
+        const modelEl = document.getElementById('model');
+
+        brands.map(brand => {
+            const li = document.createElement('li');
+            brandEl.appendChild(li);
+            const a = document.createElement('a');
+            a.href = '#';
+            li.appendChild(a);
+            a.textContent = `${brand.name}`;
+            a.addEventListener('click', ev => {
+                ev.preventDefault();
+                modelEl.innerHTML = '';
+                this.selectModel(brand,modelEl)
+            })
+        })
+
+    }
+
+    selectModel(brand,modelEl) {
+        console.log(brand);
+
+
+        brand.models.map(model =>{
+            const li = document.createElement('li');
+            modelEl.appendChild(li);
+            const a = document.createElement('a');
+            a.href='#';
+            li.appendChild(a);
+            a.textContent = `${model}`;
+            a.addEventListener('click',ev => {
+                ev.preventDefault();
+
+            })
+        })
+
+    }
 }
+
+const audi = {
+    name: "Audi",
+    models: ['A4', 'A6', 'A7', 'Q5', 'Q7']
+};
+const citroen = {
+    name: "Citroen",
+    models: ["C3", 'C4', 'C5']
+};
+const lada = {
+    name: "Lada",
+    models: ["Granta", "Kalina", "Priora", "Vesta"]
+};
+const subaru = {
+    name: "Subaru",
+    models: ['Legacy', 'Tribeca', 'Outback']
+};
+const toyota = {
+    name: "Toyota",
+    models: ['Corola', 'Camry', 'Rav4']
+};
+const bmw = {name:"BMW",
+models:['X1','X3','X5','X6']};
+
+const brands = [audi, bmw, citroen, lada, subaru, toyota];
+
 
 const app = new App(ads,
     document.getElementById('root'),
     document.getElementById('addBtn'),
     document.getElementById('search'),
 );
+
 

@@ -33,12 +33,15 @@ class App {
                 loading(this.rootEl);
                 setTimeout(() => {
                     window.onpopstate = ev => {
+                        console.log(ev);
                         this.searchItems(ev.state.string, ev.state.items)
                     };
-                    history.pushState({
+                    history.pushState(
+                        {
                         string: this.searchEl.value,
                         items: items
-                    }, `${this.searchEl.value}`, `${this.searchEl.value}`);
+                    }
+                    , `${this.searchEl.value}`, ``);
                     this.searchItems(this.searchEl.value, items)
                 }, 1000)
             });
@@ -49,10 +52,10 @@ class App {
 
     viewLastAds(items) {
 
-        window.onpopstate = (ev) => {
-            this.viewLastAds(ev.state)
+        window.onpopstate = () => {
+            this.viewLastAds(items)
         };
-        history.pushState(items, 'Новые объявления', 'index.html');
+        history.pushState(items, 'Новые объявления', '');
 
         // console.log(history.state);
         this.rootEl.innerHTML = `    <div class="mt-3">

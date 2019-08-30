@@ -38,10 +38,10 @@ class App {
                     };
                     history.pushState(
                         {
-                        string: this.searchEl.value,
-                        items: items
-                    }
-                    , `${this.searchEl.value}`, ``);
+                            string: this.searchEl.value,
+                            items: items
+                        }
+                        , `${this.searchEl.value}`, ``);
                     this.searchItems(this.searchEl.value, items)
                 }, 1000)
             });
@@ -53,6 +53,7 @@ class App {
     viewLastAds(items) {
 
         window.onpopstate = () => {
+
             this.viewLastAds(items)
         };
         history.pushState(items, 'Новые объявления', '');
@@ -115,7 +116,7 @@ class App {
 
     searchItems(string, items) {
         if (string === '') {
-         return this.viewLastAds(items)
+            return this.viewLastAds(items)
         }
         string = string.toLowerCase();
         console.log('search', string);
@@ -183,14 +184,84 @@ class App {
     addNewAd() {
         console.log('button works!');
 
-        this.rootEl.innerHTML = `<h4>Новое объявление</h4>
+        this.rootEl.innerHTML = `<h4 class="mt-3">Новое объявление</h4>
             
-            <div class="container">
-            <div class="row">
-            <div class="col"><p>Выберите марку <ul id="brand"></ul></p></div>
-            <div class="col" <p>Выберите модель <ul id="model"></ul></p></div>
-            </div>
-            </div>
+          <div class="container">
+    <div class="row">
+        <div class="col">
+            <form>
+
+                <div class="form-group">
+                    <label for="brand">Выберите марку</label>
+                    <select class="form-control" id="brand">
+                        <option></option>
+                        <option>Lada</option>
+                        <option>Toyota</option>
+                        <option>Nissan</option>
+                        <option>Hyundai</option>
+                        <option>Kia</option>
+                        <option>Renault</option>
+                        <option>Chevrolet</option>
+                        <option>Volkswagen</option>
+                        <option>Ford</option>
+                        <option>Mitsubishi</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="model">Выберите модель</label>
+                    <select class="form-control" id="model" disabled>
+                        <option></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="year">Год выпуска</label>
+                    <select class="form-control" id="year">
+                        <option></option>
+                        <option>2019</option>
+                        <option>2018</option>
+                        <option>2017</option>
+                        <option>2016</option>
+                        <option>2015</option>
+                        <option>2014</option>
+                        <option>2013</option>
+                        <option>2012</option>
+                        <option>2011</option>
+                        <option>2010</option>
+                        <option>2009</option>
+                        <option>2008</option>
+                        <option>2007</option>
+                        <option>2006</option>
+                        <option>2005</option>
+                        <option>2004</option>
+                        <option>2003</option>
+                        <option>2002</option>
+                        <option>2001</option>
+                        <option>2000</option>
+
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="km">Пробег (км)</label>
+                    <input type="number"  class="form-control" id="km">
+                </div>
+
+                <div class="form-group">
+                    <label for="gearbox">Коробка передач</label>
+                    <select class="form-control" id="gearbox" >
+                        <option></option>
+                        <option>Механика</option>
+                        <option>Автомат</option>
+                        <option>Робот</option>
+                        <option>Вариатор</option>
+                    </select>
+                </div>
+                <button id="continue" class="btn btn-primary float-right">Продолжить</button>
+                </form>
+                </div>
+                </div>
+                </div>
+               
 
             `;
         const brandEl = document.getElementById('brand');

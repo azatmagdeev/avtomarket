@@ -19,12 +19,14 @@
         <div class="row">
 
             <!-- HEADER -->
-            <header class="col-md-12 col-xl-12 order-md-0 order-xl-1">
+            <header class="col-md-12 col-xl-12 order-md-0 order-xl-1" style="background-color: powderblue;">
                 <div class="container">
                     <div class="row mt-3">
                         <div class="col"><img src="img/cars-clip-icon-2.png" width="50px" alt=""></div>
-                        <div class="col" style="text-align: left"><h2>АвтоРынок</h2></div>
-                        <div class="col"><button class="btn btn-primary" id="addBtn">Подать объявление</button></div>
+                        <div class="col" style="text-align: center"><h2>АвтоРынок</h2></div>
+                        <div class="col float-right">
+                            <button class="btn btn-primary float-right" id="addBtn">Подать объявление</button>
+                        </div>
                     </div>
                 </div>
 
@@ -34,31 +36,34 @@
 
 
 <!--                        <a href="#">Авто </a>-->
-<!--                        <a href="#">Недвижимость </a>-->
-<!--                        <a href="#">Работа </a>-->
-<!--                        <a href="#">Услуги </a>-->
-<!--                        <a href="#">ещё... </a>-->
+                        <!--                        <a href="#">Недвижимость </a>-->
+                        <!--                        <a href="#">Работа </a>-->
+                        <!--                        <a href="#">Услуги </a>-->
+                        <!--                        <a href="#">ещё... </a>-->
                     </span>
                 </div>
 
-                <div class="form mt-3">
+                <div class="row form mt-3">
+                    <div class="col">
+                        <input type="text" placeholder="Поиск по объявлениям" id="search" class="form-control">
+                    </div>
+                    <div class="col">
+                        <select name="city" id="city" class="form-control">
+                            <option value="kazan">Казань</option>
+                        </select>
+                    </div>
+
+                    <!--                    <select name="category" id="category">-->
+                    <!--                        <option value="1">Любая категория</option>-->
+                    <!--                        <option value="2">Транспорт</option>-->
+                    <!--                        <option value="3">Недвижимость</option>-->
+                    <!--                        <option value="4">Работа</option>-->
+                    <!--                        <option value="5">Услуги</option>-->
+                    <!--                    </select>-->
 
 
-<!--                    <select name="category" id="category">-->
-<!--                        <option value="1">Любая категория</option>-->
-<!--                        <option value="2">Транспорт</option>-->
-<!--                        <option value="3">Недвижимость</option>-->
-<!--                        <option value="4">Работа</option>-->
-<!--                        <option value="5">Услуги</option>-->
-<!--                    </select>-->
-
-
-                    <input type="text" placeholder="Поиск по объявлениям" id="search">
-                    <select name="city" id="city">
-                        <option value="kazan">Казань</option>
-                    </select>
-                    <button id="searchBtn">Найти</button>
                 </div>
+                <div class=" row mt-3"></div>
 
             </header>
 
@@ -74,7 +79,7 @@
 
 <!-- MAIN -->
 
-<main >
+<main>
     <div class="container">
         <div class="row">
             <!-- NAV #2 -->
@@ -82,32 +87,30 @@
 
             </nav>
             <!-- ARTICLE -->
-            <article class="col-md-8 col-xl-7" id="root" >
-
-
+            <article class="col-md-8 col-xl-7" id="root">
 
 
             </article>
             <!-- ASIDE -->
             <aside class="col-md-4 col-xl-3">
 
-<!--                <div><b>-->
-<!--                    <h4>-->
-<!--                        Вы просмотрели:-->
-<!--                    </h4>-->
-<!--                </b></div>-->
+                <!--                <div><b>-->
+                <!--                    <h4>-->
+                <!--                        Вы просмотрели:-->
+                <!--                    </h4>-->
+                <!--                </b></div>-->
 
-<!--                <div class="card mt-3 " style="width: 18rem;">-->
-<!--                    <img class="card-img-top" src="https://placekitten.com/150/100" alt="Card image cap">-->
-<!--                    <div class="card-body">-->
+                <!--                <div class="card mt-3 " style="width: 18rem;">-->
+                <!--                    <img class="card-img-top" src="https://placekitten.com/150/100" alt="Card image cap">-->
+                <!--                    <div class="card-body">-->
 
-<!--                        <a href="#" class=""><h5 class="card-title">Домашняя кошка</h5></a>-->
-<!--                        <p class="card-text"><b>1000 руб.</b></p>-->
-<!--                        <p class="card-text">Казань</p>-->
-<!--                        <p class="card-text">Сегодня 9.50</p>-->
+                <!--                        <a href="#" class=""><h5 class="card-title">Домашняя кошка</h5></a>-->
+                <!--                        <p class="card-text"><b>1000 руб.</b></p>-->
+                <!--                        <p class="card-text">Казань</p>-->
+                <!--                        <p class="card-text">Сегодня 9.50</p>-->
 
-<!--                    </div>-->
-<!--                </div>-->
+                <!--                    </div>-->
+                <!--                </div>-->
 
             </aside>
         </div>

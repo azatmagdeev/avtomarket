@@ -1,9 +1,7 @@
 import {Ads, formateDate, loading} from "./lib.js";
+import {defineOptions} from "./cars.js";
 
 console.log(location);
-// if (window.location !== '') {
-//     window.location = ''
-// }
 
 const ads = new Ads();
 
@@ -18,7 +16,6 @@ class App {
         });
         this.init();
     }
-
 
     init() {
         // todo: parse current url
@@ -80,7 +77,7 @@ class App {
         this.ads.getSellers(sellers => {
             // console.log('sellers', sellers);
             const seller = sellers.filter(seller => seller.id === o.sellerId)[0];
-            // console.log('seller', seller);
+            console.log('seller', seller);
             this.rootEl.textContent = '';
             this.rootEl.innerHTML = `
 <!--            <button class="btn btn-primary mt-3" id="backBtn"><- Назад</button>-->
@@ -97,17 +94,17 @@ class App {
             <p>${o.text}</p>
             <p class="mt-3"><h5>Продавец: ${seller.name}</h5></p>
             <button class="btn btn-primary" id="showPhone">Показать телефон</button>
-            <button class="btn btn-outline-secondary" id="smsSeller">Написать сообщение</button>
+<!--            <button class="btn btn-outline-secondary" id="smsSeller">Написать сообщение</button>-->
             <p class="mt-3">${formateDate(o.date)}</p>
             `;
-            const backBtn = document.getElementById('backBtn');
-            backBtn.addEventListener('click', () => {
-                this.init()
-            });
+            // const backBtn = document.getElementById('backBtn');
+            // backBtn.addEventListener('click', () => {
+            //     this.init()
+            // });
             const showPhone = document.getElementById('showPhone');
             showPhone.addEventListener('click', () => {
-                showPhone.innerHTML = `<b>${seller.phoneNumber}</b>`;
-                showPhone.className = 'btn btn-outline-secondary';
+                showPhone.innerHTML = `<h4>${seller.phoneNumber}</h4>`;
+                showPhone.className = 'btn';
             })
         });
 
@@ -210,7 +207,7 @@ class App {
                 <div class="form-group">
                     <label for="model">Выберите модель</label>
                     <select class="form-control" id="model" disabled>
-                        <option></option>
+<!--                        <option></option>-->
                     </select>
                 </div>
 
@@ -264,22 +261,35 @@ class App {
                
 
             `;
+        // const Toyota = ['camry', 'corola'];
         const brandEl = document.getElementById('brand');
         const modelEl = document.getElementById('model');
+        brandEl.addEventListener('input', () => {
+            // console.log(brandEl.value);
+            modelEl.innerHTML = '';
+            modelEl.appendChild(new Option(''));
+            if (brandEl.value !== '') {
+                modelEl.disabled = false;
+                defineOptions(brandEl.value, modelEl)
+            }else{modelEl.disabled = true}
 
-        brands.map(brand => {
-            const li = document.createElement('li');
-            brandEl.appendChild(li);
-            const a = document.createElement('a');
-            a.href = '#';
-            li.appendChild(a);
-            a.textContent = `${brand.name}`;
-            a.addEventListener('click', ev => {
-                ev.preventDefault();
-                modelEl.innerHTML = '';
-                this.selectModel(brand, modelEl)
-            })
-        })
+
+        });
+
+
+        // brands.map(brand => {
+        //     const li = document.createElement('li');
+        //     brandEl.appendChild(li);
+        //     const a = document.createElement('a');
+        //     a.href = '#';
+        //     li.appendChild(a);
+        //     a.textContent = `${brand.name}`;
+        //     a.addEventListener('click', ev => {
+        //         ev.preventDefault();
+        //         modelEl.innerHTML = '';
+        //         this.selectModel(brand, modelEl)
+        //     })
+        // })
 
     }
 
@@ -302,33 +312,6 @@ class App {
 
     }
 }
-
-const audi = {
-    name: "Audi",
-    models: ['A4', 'A6', 'A7', 'Q5', 'Q7']
-};
-const citroen = {
-    name: "Citroen",
-    models: ["C3", 'C4', 'C5']
-};
-const lada = {
-    name: "Lada",
-    models: ["Granta", "Kalina", "Priora", "Vesta"]
-};
-const subaru = {
-    name: "Subaru",
-    models: ['Legacy', 'Tribeca', 'Outback']
-};
-const toyota = {
-    name: "Toyota",
-    models: ['Corola', 'Camry', 'Rav4']
-};
-const bmw = {
-    name: "BMW",
-    models: ['X1', 'X3', 'X5', 'X6']
-};
-
-const brands = [audi, bmw, citroen, lada, subaru, toyota];
 
 
 const app = new App(ads,

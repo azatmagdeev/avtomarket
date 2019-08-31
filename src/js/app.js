@@ -55,34 +55,27 @@ class App {
         };
         history.pushState(items, 'Новые объявления', '');
 
-        // console.log(history.state);
+
         this.rootEl.innerHTML = `    <div class="mt-3">
                     <b><h4>Новые объявления:</h4> </b></div>
                     <p>Всего объявлений: ${items.length}</p>
                 <div class="card-deck" id=""> </div>`;
         const cardDeck = document.querySelector('.card-deck');
 
-        this.viewCardDeck(items.reverse(), cardDeck);
-
-
+        this.viewCardDeck(items, cardDeck);
     }
 
     viewItem(o) {
-        // window.onpopstate = ev =>{
-        //     this.viewItem(ev.state)
-        // };
+
         history.pushState(o, `${o.brand} ${o.model}, ${o.year}`, `${o.brand}${o.model}${o.year}.html`);
-        // console.log(history.state);
 
         this.ads.getSellers(sellers => {
-            // console.log('sellers', sellers);
             const seller = sellers.filter(seller => seller.id === o.sellerId)[0];
             console.log('seller', seller);
             this.rootEl.textContent = '';
             this.rootEl.innerHTML = `
-<!--            <button class="btn btn-primary mt-3" id="backBtn"><- Назад</button>-->
             <h3 class="">${o.brand} ${o.model}, ${o.year}</h3>
-            <img class="mt-3" width="100%" src=${o.photos[0]}>
+            <img class="mt-3" width="100%" src=${o.photos[0]} alt=${o.brand}${o.model}${o.year}>
             <table class="mt-3">
              <tr><td>Марка:</td><td>${o.brand}</td></tr>
             <tr><td>Модель:</td><td>${o.model}</td></tr>
@@ -94,22 +87,15 @@ class App {
             <p>${o.text}</p>
             <p class="mt-3"><h5>Продавец: ${seller.name}</h5></p>
             <button class="btn btn-primary" id="showPhone">Показать телефон</button>
-<!--            <button class="btn btn-outline-secondary" id="smsSeller">Написать сообщение</button>-->
             <p class="mt-3">${formateDate(o.date)}</p>
             `;
-            // const backBtn = document.getElementById('backBtn');
-            // backBtn.addEventListener('click', () => {
-            //     this.init()
-            // });
             const showPhone = document.getElementById('showPhone');
             showPhone.addEventListener('click', () => {
                 showPhone.innerHTML = `<h4>${seller.phoneNumber}</h4>`;
                 showPhone.className = 'btn';
             })
         });
-
     }
-
 
     searchItems(string, items) {
         if (string === '') {
@@ -128,9 +114,7 @@ class App {
             if (searchedItems !== null) {
                 filteredItems.push(o)
             }
-            // console.log(filteredItems);
         });
-
 
         this.rootEl.innerHTML = `    <div class="mt-3">
                     <b><h4>Результаты поиска: ${filteredItems.length}</h4> </b></div>
@@ -138,7 +122,6 @@ class App {
         const cardDeck = document.querySelector('.card-deck');
 
         this.viewCardDeck(filteredItems, cardDeck);
-
     }
 
     viewCardDeck(items, cardDeck) {
@@ -157,7 +140,6 @@ class App {
                             <p class="card-text"><b>${o.price} руб.</b></p>
                             <p class="card-text">Казань</p>
 <!--                            <p class="card-text">${o.date}</p>-->
-
                         </div>
                     </div>
                 `;
@@ -169,17 +151,13 @@ class App {
                         setTimeout(() => {
                             this.viewItem(o)
                         }, 100)
-
                     })
-
-
                 }
             )
         }
     }
 
     addNewAd() {
-        console.log('button works!');
 
         this.rootEl.innerHTML = `<h4 class="mt-3">Новое объявление</h4>
             
@@ -207,7 +185,6 @@ class App {
                 <div class="form-group">
                     <label for="model">Выберите модель</label>
                     <select class="form-control" id="model" disabled>
-<!--                        <option></option>-->
                     </select>
                 </div>
 
@@ -253,6 +230,10 @@ class App {
                         <option>Вариатор</option>
                     </select>
                 </div>
+                <div class="form-group">
+                <label for="price">Цена (руб)</label>
+                <input type="number" id="price" class="form-control">
+</div>
                 <button id="continue" class="btn btn-primary float-right">Продолжить</button>
                 </form>
                 </div>
@@ -261,63 +242,27 @@ class App {
                
 
             `;
-        // const Toyota = ['camry', 'corola'];
+
         const brandEl = document.getElementById('brand');
         const modelEl = document.getElementById('model');
+
         brandEl.addEventListener('input', () => {
-            // console.log(brandEl.value);
             modelEl.innerHTML = '';
             modelEl.appendChild(new Option(''));
             if (brandEl.value !== '') {
                 modelEl.disabled = false;
                 defineOptions(brandEl.value, modelEl)
             }else{modelEl.disabled = true}
-
-
         });
-
-
-        // brands.map(brand => {
-        //     const li = document.createElement('li');
-        //     brandEl.appendChild(li);
-        //     const a = document.createElement('a');
-        //     a.href = '#';
-        //     li.appendChild(a);
-        //     a.textContent = `${brand.name}`;
-        //     a.addEventListener('click', ev => {
-        //         ev.preventDefault();
-        //         modelEl.innerHTML = '';
-        //         this.selectModel(brand, modelEl)
-        //     })
-        // })
-
-    }
-
-    selectModel(brand, modelEl) {
-        console.log(brand);
-
-
-        brand.models.map(model => {
-            const li = document.createElement('li');
-            modelEl.appendChild(li);
-            const a = document.createElement('a');
-            a.href = '#';
-            li.appendChild(a);
-            a.textContent = `${model}`;
-            a.addEventListener('click', ev => {
-                ev.preventDefault();
-
-            })
-        })
-
     }
 }
-
 
 const app = new App(ads,
     document.getElementById('root'),
     document.getElementById('addBtn'),
     document.getElementById('search'),
 );
+
+console.log(app);
 
 

@@ -1,5 +1,5 @@
 import {Ads, formateDate, loading} from "./lib.js";
-import {defineOptions} from "./cars.js";
+import {cars, defineOptions} from "./cars.js";
 
 console.log(location);
 
@@ -170,16 +170,6 @@ class App {
                     <label for="brand">Выберите марку</label>
                     <select class="form-control" id="brand">
                         <option></option>
-                        <option>Lada</option>
-                        <option>Toyota</option>
-                        <option>Nissan</option>
-                        <option>Hyundai</option>
-                        <option>Kia</option>
-                        <option>Renault</option>
-                        <option>Chevrolet</option>
-                        <option>Volkswagen</option>
-                        <option>Ford</option>
-                        <option>Mitsubishi</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -217,7 +207,15 @@ class App {
                 </div>
                 <div class="form-group">
                     <label for="km">Пробег (км)</label>
-                    <input type="number"  class="form-control" id="km">
+                    <select  class="form-control" id="km">
+                    <option></option>
+                    <option>0 - 10 тысяч</option>
+                    <option>10 - 50 тысяч</option>
+                    <option>50 - 100 тысяч</option>
+                    <option>100 - 150 тысяч</option>
+                    <option>150 - 200 тысяч</option>
+                    <option>более 200 тысяч</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -233,18 +231,58 @@ class App {
                 <div class="form-group">
                 <label for="price">Цена (руб)</label>
                 <input type="number" id="price" class="form-control">
-</div>
+                </div>
+                  <div class="form-group">
+                    <label for="text">Подробнее</label>
+                    <textarea class="form-control" id="text" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="photo">Добавьте фото</label>
+                    <input type="file" class="form-control-file" id="photo" aria-describedby="fileHelp">
+<!--                    <small id="fileHelp" class="form-text text-muted">This is some placeholder block-level help text for-->
+<!--                        the above input. It's a bit lighter and easily wraps to a new line.-->
+<!--                    </small>-->
+                </div>
+                <div id="photos"></div>
+
                 <button id="continue" class="btn btn-primary float-right">Продолжить</button>
                 </form>
                 </div>
                 </div>
                 </div>
-               
+                `;
+        const photosEl =  document.querySelector('#photos');
+        const inputEl = document.querySelector('#photo');
+        inputEl.addEventListener('change',()=>{
+            const file = inputEl.files[0];
+            console.log(file);
+            const img = new Image(100);
+            img.src = window.URL.createObjectURL(file);
+            img.onload = function() {
+                window.URL.revokeObjectURL(this.src);
+            };
 
-            `;
+            const photoEl = document.createElement('div');
+            photoEl.appendChild(img);
+            photoEl.className = 'm-1';
+            photosEl.appendChild(photoEl);
+            const removePhotoBtn = document.createElement("button");
+            removePhotoBtn.textContent ='x';
+            removePhotoBtn.className = 'btn btn-sm btn-danger';
+
+            photoEl.appendChild(removePhotoBtn);
+            removePhotoBtn.addEventListener('click',ev =>{
+                ev.preventDefault();
+                photosEl.removeChild(photoEl)
+            })
+        });
 
         const brandEl = document.getElementById('brand');
         const modelEl = document.getElementById('model');
+
+        cars.map(
+            car => brandEl.appendChild(new Option(car.name))
+        );
 
         brandEl.addEventListener('input', () => {
             modelEl.innerHTML = '';

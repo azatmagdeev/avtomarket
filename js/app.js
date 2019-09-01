@@ -1,7 +1,12 @@
 import {Ads, formateDate, loading} from "./lib.js";
 import {cars, defineOptions} from "./cars.js";
 
-console.log(location);
+// console.log(location);
+const sasha = {
+    email: 'sasha@ya.ru',
+    password: '1234'
+};
+
 
 const ads = new Ads();
 
@@ -28,14 +33,42 @@ class App {
         <input type="password" class="form-control" id="password">
         
         <div class="form-group mt-3">
+        
+        <button class="btn btn-primary float-right" id="logIn">Войти</button>
         <button class="btn float-left border-primary" id="signIn">Нет аккаунта?</button>
-        <button class="btn btn-primary float-right">Войти</button>
 </div>
 </fieldset></form>
    `;
-        document.getElementById('signIn').addEventListener('click',e=>{
-            e.preventDefault();
+        const emailEl = document.getElementById('email');
+        const passwordEl = document.getElementById('password');
+
+        document.getElementById('signIn').addEventListener('click', e => {
+            // e.preventDefault();
             this.signIn()
+        });
+
+        document.querySelector('#logIn').addEventListener('click', evt => {
+            // evt.preventDefault();
+
+            if (emailEl.value === sasha.email) {
+                if (passwordEl.value === sasha.password) {
+                    this.addNewAd()
+                }
+            }
+
+            const error = document.createElement('p');
+            error.innerHTML = `<p style="color: red">Неверный пароль или e-mail</p>`;
+            this.rootEl.appendChild(error);
+            evt.preventDefault()
+
+            emailEl.addEventListener('input', () => {
+                this.rootEl.removeChild(error)
+            });
+            passwordEl.addEventListener('input', () => {
+                this.rootEl.removeChild(error)
+            });
+
+
         })
     }
 

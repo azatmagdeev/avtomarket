@@ -12,9 +12,52 @@ class App {
         this.searchEl = searchEl;
         this.addBtn = addBtn;
         this.addBtn.addEventListener('click', () => {
-            this.addNewAd()
+            this.logIn()
         });
         this.init();
+    }
+
+    logIn() {
+        this.rootEl.innerHTML = `
+        <form class="form-group">
+        <fieldset class="form-group">
+        <legend>Войдите в свой аккаунт</legend>
+         <label for="email" class="form-group">Введите эл.почту</label>
+        <input type="email" class="form-control" id="email">
+        <label for="password" class="form-group">Введите пароль</label>
+        <input type="password" class="form-control" id="password">
+        
+        <div class="form-group mt-3">
+        <button class="btn float-left border-primary" id="signIn">Нет аккаунта?</button>
+        <button class="btn btn-primary float-right">Войти</button>
+</div>
+</fieldset></form>
+   `;
+        document.getElementById('signIn').addEventListener('click',e=>{
+            e.preventDefault();
+            this.signIn()
+        })
+    }
+
+    signIn() {
+        this.rootEl.innerHTML = `       
+<form class="form-group">
+<fieldset class="form-group">
+<legend>Зарегистрируйтесь</legend>
+<label for="name" class="form-group">Имя</label>
+<input type="text" id="name" class="form-control">
+<label for="email" class="form-group">Эл. почта</label>
+<input type="email" id="email" class="form-control">
+<label for="tel" class="form-group">Телефон</label>
+<input type="tel" id="tel" class="form-control">
+<label for="password" class="form-group">Пароль</label>
+<input type="password" id="password" class="form-control">
+<label for="pass-word" class="form-group">Пароль ещё раз</label>
+<input type="password" id="pass-word" class="form-control">
+<button class="btn btn-primary mt-3">Зарегистрироваться</button>
+</fieldset>
+</form>`;
+
     }
 
     init() {
@@ -63,6 +106,39 @@ class App {
         const cardDeck = document.querySelector('.card-deck');
 
         this.viewCardDeck(items, cardDeck);
+    }
+
+    viewCardDeck(items, cardDeck) {
+
+        if (items.length === 0) {
+            cardDeck.innerHTML = `Ничего не найдено ¯\\_(ツ)_/¯ `;
+        } else {
+            items.map(o => {
+                    const cardEl = document.createElement('div');
+                    cardEl.innerHTML = `
+                  <div class="card mt-3 " style="width: 18rem;">
+                        <img class="card-img-top" src=${o.photos[0]} alt="Card image cap" width="286 px" height="215 px">
+                        <div class="card-body">
+
+                            <a href="#" class=""><h5 class="card-title">${o.brand} ${o.model}, ${o.year}</h5></a>
+                            <p class="card-text"><b>${o.price} руб.</b></p>
+                            <p class="card-text">Казань</p>
+<!--                            <p class="card-text">${o.date}</p>-->
+                        </div>
+                    </div>
+                `;
+
+                    cardDeck.appendChild(cardEl);
+                    cardEl.addEventListener('click' || 'touchstart', (ev) => {
+                        ev.preventDefault();
+                        loading(this.rootEl);
+                        setTimeout(() => {
+                            this.viewItem(o)
+                        }, 100)
+                    })
+                }
+            )
+        }
     }
 
     viewItem(o) {
@@ -124,38 +200,6 @@ class App {
         this.viewCardDeck(filteredItems, cardDeck);
     }
 
-    viewCardDeck(items, cardDeck) {
-
-        if (items.length === 0) {
-            cardDeck.innerHTML = `Ничего не найдено ¯\\_(ツ)_/¯ `;
-        } else {
-            items.map(o => {
-                    const cardEl = document.createElement('div');
-                    cardEl.innerHTML = `
-                  <div class="card mt-3 " style="width: 18rem;">
-                        <img class="card-img-top" src=${o.photos[0]} alt="Card image cap" width="286 px" height="215 px">
-                        <div class="card-body">
-
-                            <a href="#" class=""><h5 class="card-title">${o.brand} ${o.model}, ${o.year}</h5></a>
-                            <p class="card-text"><b>${o.price} руб.</b></p>
-                            <p class="card-text">Казань</p>
-<!--                            <p class="card-text">${o.date}</p>-->
-                        </div>
-                    </div>
-                `;
-
-                    cardDeck.appendChild(cardEl);
-                    cardEl.addEventListener('click' || 'touchstart', (ev) => {
-                        ev.preventDefault();
-                        loading(this.rootEl);
-                        setTimeout(() => {
-                            this.viewItem(o)
-                        }, 100)
-                    })
-                }
-            )
-        }
-    }
 
     addNewAd() {
 
@@ -251,14 +295,14 @@ class App {
                 </div>
                 </div>
                 `;
-        const photosEl =  document.querySelector('#photos');
+        const photosEl = document.querySelector('#photos');
         const inputEl = document.querySelector('#photo');
-        inputEl.addEventListener('change',()=>{
+        inputEl.addEventListener('change', () => {
             const file = inputEl.files[0];
             console.log(file);
             const img = new Image(100);
             img.src = window.URL.createObjectURL(file);
-            img.onload = function() {
+            img.onload = function () {
                 window.URL.revokeObjectURL(this.src);
             };
 
@@ -267,11 +311,11 @@ class App {
             photoEl.className = 'm-1';
             photosEl.appendChild(photoEl);
             const removePhotoBtn = document.createElement("button");
-            removePhotoBtn.textContent ='x';
+            removePhotoBtn.textContent = 'x';
             removePhotoBtn.className = 'btn btn-sm btn-danger';
 
             photoEl.appendChild(removePhotoBtn);
-            removePhotoBtn.addEventListener('click',ev =>{
+            removePhotoBtn.addEventListener('click', ev => {
                 ev.preventDefault();
                 photosEl.removeChild(photoEl)
             })
@@ -290,7 +334,9 @@ class App {
             if (brandEl.value !== '') {
                 modelEl.disabled = false;
                 defineOptions(brandEl.value, modelEl)
-            }else{modelEl.disabled = true}
+            } else {
+                modelEl.disabled = true
+            }
         });
     }
 }

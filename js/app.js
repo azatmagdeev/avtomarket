@@ -43,12 +43,12 @@ class App {
         const passwordEl = document.getElementById('password');
 
         document.getElementById('signIn').addEventListener('click', e => {
-            // e.preventDefault();
+            e.preventDefault();
             this.signIn()
         });
 
         document.querySelector('#logIn').addEventListener('click', evt => {
-            // evt.preventDefault();
+            evt.preventDefault();
 
             if (emailEl.value === sasha.email) {
                 if (passwordEl.value === sasha.password) {

@@ -52,14 +52,15 @@ class App {
 
             if (emailEl.value === sasha.email) {
                 if (passwordEl.value === sasha.password) {
-                    this.addNewAd()
+                    this.addNewAd();
+                    return
                 }
             }
 
             const error = document.createElement('p');
             error.innerHTML = `<p style="color: red">Неверный пароль или e-mail</p>`;
             this.rootEl.appendChild(error);
-            evt.preventDefault()
+            evt.preventDefault();
 
             emailEl.addEventListener('input', () => {
                 this.rootEl.removeChild(error)
@@ -87,9 +88,29 @@ class App {
 <input type="password" id="password" class="form-control">
 <label for="pass-word" class="form-group">Пароль ещё раз</label>
 <input type="password" id="pass-word" class="form-control">
-<button class="btn btn-primary mt-3">Зарегистрироваться</button>
+<button class="btn btn-primary mt-3" id="signIn">Зарегистрироваться</button>
 </fieldset>
 </form>`;
+        const name = document.getElementById('name');
+        const password = document.getElementById('password');
+        const tel = document.getElementById('tel');
+        const email = document.getElementById('email');
+
+        document.getElementById('signIn').addEventListener('click', ev => {
+            ev.preventDefault();
+console.log(name.value,password.value,tel.value,email.value);
+            ads.addNewSeller(
+                name.value,
+                password.value,
+                tel.value,
+                email.value,
+                () => {
+                    loading(this.rootEl);
+                    setTimeout(()=>{this.addNewAd()},100)
+                }
+            );
+            console.log(seller);
+        })
 
     }
 

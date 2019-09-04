@@ -31,13 +31,27 @@ export class Ads {
         xhr.open('POST', `${this.apiUrl}sellers`);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.addEventListener('load', () => {
-            success()
+            success(JSON.parse(xhr.responseText))
         });
         const newSeller = {
             name: name,
             password: password, phoneNumber: phoneNumber, email: email
         };
-        xhr.send(newSeller)
+        xhr.send(JSON.stringify(newSeller))
+    }
+
+    authorization(email,password,success){
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST',`${this.apiUrl}authorization`);
+        xhr.setRequestHeader('Content-Type','application/json');
+        xhr.addEventListener('load',()=>{
+            success(JSON.parse(xhr.responseText))
+        });
+        const data = {
+            email: email,
+            password: password
+        };
+        xhr.send(JSON.stringify(data))
     }
 }
 

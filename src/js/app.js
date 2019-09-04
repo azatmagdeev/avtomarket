@@ -49,25 +49,30 @@ class App {
 
         document.querySelector('#logIn').addEventListener('click', evt => {
             evt.preventDefault();
+            ads.authorization(emailEl.value,passwordEl.value,(data)=>{
+                console.log(data.id);
+                if(data.id === null){
+                    const error = document.createElement('p');
+                    error.innerHTML = `<p style="color: red">${data.response}</p>`;
+                    this.rootEl.appendChild(error);
 
-            if (emailEl.value === sasha.email) {
-                if (passwordEl.value === sasha.password) {
-                    this.addNewAd();
-                    return
+                    emailEl.addEventListener('input', () => {
+                        this.rootEl.removeChild(error)
+                    });
+                    passwordEl.addEventListener('input', () => {
+                        this.rootEl.removeChild(error)
+                    });
                 }
-            }
+                if(data.id !== null){
+                    loading(this.rootEl);
+                    setTimeout(()=>{this.addNewAd(data)},500);
 
-            const error = document.createElement('p');
-            error.innerHTML = `<p style="color: red">Неверный пароль или e-mail</p>`;
-            this.rootEl.appendChild(error);
-            evt.preventDefault();
+                }
 
-            emailEl.addEventListener('input', () => {
-                this.rootEl.removeChild(error)
+
+
             });
-            passwordEl.addEventListener('input', () => {
-                this.rootEl.removeChild(error)
-            });
+
 
 
         })
@@ -104,12 +109,13 @@ console.log(name.value,password.value,tel.value,email.value);
                 password.value,
                 tel.value,
                 email.value,
-                () => {
+                (seller) => {
                     loading(this.rootEl);
-                    setTimeout(()=>{this.addNewAd()},100)
+                    console.log(seller);
+                    setTimeout(()=>{this.addNewAd(seller)},500)
                 }
             );
-            console.log(seller);
+            // console.log(seller);
         })
 
     }
@@ -255,7 +261,7 @@ console.log(name.value,password.value,tel.value,email.value);
     }
 
 
-    addNewAd() {
+    addNewAd(seller) {
 
         this.rootEl.innerHTML = `<h4 class="mt-3">Новое объявление</h4>
             
@@ -333,6 +339,14 @@ console.log(name.value,password.value,tel.value,email.value);
                   <div class="form-group">
                     <label for="text">Подробнее</label>
                     <textarea class="form-control" id="text" rows="4"></textarea>
+                </div>
+                  <div class="form-group">
+                <label for="name">Как к Вам обращаться</label>
+                <input type="text" id="name" value="${seller.name}" class="form-control">
+                </div>
+                  <div class="form-group">
+                <label for="tel">Номер телефона</label>
+                <input type="text" id="tel" value="${seller.phoneNumber}" class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="photo">Добавьте фото</label>

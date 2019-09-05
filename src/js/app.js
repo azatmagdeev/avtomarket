@@ -1,4 +1,4 @@
-import {Ads, formateDate, loading} from "./lib.js";
+import {Ads,Ad, formateDate, loading} from "./lib.js";
 import {cars, defineOptions} from "./cars.js";
 
 // console.log(location);
@@ -342,11 +342,11 @@ console.log(name.value,password.value,tel.value,email.value);
                 </div>
                   <div class="form-group">
                 <label for="name">Как к Вам обращаться</label>
-                <input type="text" id="name" value="${seller.name}" class="form-control">
+                <input type="text" id="name" value="${seller.name}" disabled class="form-control">
                 </div>
                   <div class="form-group">
                 <label for="tel">Номер телефона</label>
-                <input type="text" id="tel" value="${seller.phoneNumber}" class="form-control">
+                <input type="text" id="tel" value="${seller.phoneNumber}" disabled class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="photo">Добавьте фото</label>
@@ -406,6 +406,23 @@ console.log(name.value,password.value,tel.value,email.value);
                 modelEl.disabled = true
             }
         });
+
+        document.getElementById('continue').addEventListener('click',(ev)=>{
+            ev.preventDefault();
+            const newAd = new Ad(
+                brandEl.value,
+                modelEl.value,
+                document.getElementById('year').value,
+                document.getElementById('km').value,
+                document.getElementById('gearbox').value,
+                document.getElementById('text').value,
+                document.getElementById('price').value,
+                seller.id,
+                null
+            )
+            console.log(newAd);
+
+        })
     }
 }
 

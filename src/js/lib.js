@@ -1,3 +1,17 @@
+export class Ad {
+    constructor(brand, model, year, km, gearbox, text, price, sellerId, photos) {
+        this.brand = brand;
+        this.model = model;
+        this.year = year;
+        this.km = km;
+        this.gearbox = gearbox;
+        this.text = text;
+        this.price = price;
+        this.sellerId = sellerId;
+        this.photos = photos;
+    }
+}
+
 export class Ads {
     constructor() {
         this.apiUrl = 'https://avito-back.herokuapp.com/';

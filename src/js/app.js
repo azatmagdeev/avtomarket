@@ -96,15 +96,17 @@ class App {
 
         document.getElementById('signIn').addEventListener('click', ev => {
             ev.preventDefault();
-            console.log(name.value, password.value, tel.value, email.value);
+            loading(this.rootEl);
+
+            // console.log(name.value, password.value, tel.value, email.value);
             ads.addNewSeller(
                 name.value,
                 password.value,
                 tel.value,
                 email.value,
                 (seller) => {
-                    loading(this.rootEl);
-                    console.log(seller);
+
+                    // console.log(seller);
                     setTimeout(() => {
                         this.addNewAd(seller)
                     }, 500)
@@ -202,7 +204,7 @@ class App {
 
         this.ads.getSellers(sellers => {
             const seller = sellers.filter(seller => seller.id === o.sellerId)[0];
-            console.log('seller', seller);
+            // console.log('seller', seller);
             this.rootEl.textContent = '';
             this.rootEl.innerHTML = `
             <h3 class="">${o.brand} ${o.model}, ${o.year}</h3>
@@ -440,6 +442,7 @@ class App {
 
         document.getElementById('continue').addEventListener('click', (ev) => {
             ev.preventDefault();
+
             // photosEl.querySelectorAll("img").forEach(img =>{
             //     console.log(img.src);
             // });
@@ -455,6 +458,7 @@ class App {
                 [...data]
             );
             console.log(newAd);
+            loading(this.rootEl);
             this.ads.addNewItem(newAd, (item) => {
                 this.viewItem(item)
             })

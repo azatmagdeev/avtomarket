@@ -67,6 +67,17 @@ export class Ads {
         };
         xhr.send(JSON.stringify(data))
     }
+
+    addNewItem(item,success){
+        const xhr=new XMLHttpRequest();
+        xhr.open('POST', this.apiUrl);
+        xhr.setRequestHeader('Content-Type','application/json');
+        xhr.addEventListener('load',()=>{
+            console.log(xhr.responseText);
+            success(JSON.parse(xhr.responseText))
+        });
+        xhr.send(JSON.stringify(item))
+    }
 }
 
 export function formateDate(i) {

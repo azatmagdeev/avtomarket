@@ -1,12 +1,5 @@
-import {Ads,Ad, formateDate, loading} from "./lib.js";
+import {Ads, Ad, formateDate, loading} from "./lib.js";
 import {cars, defineOptions} from "./cars.js";
-
-// console.log(location);
-const sasha = {
-    email: 'sasha@ya.ru',
-    password: '1234'
-};
-
 
 const ads = new Ads();
 
@@ -28,9 +21,9 @@ class App {
         <fieldset class="form-group">
         <legend>Войдите в свой аккаунт</legend>
          <label for="email" class="form-group">Введите эл.почту</label>
-        <input type="email" class="form-control" id="email">
+        <input type="email" class="form-control" id="email" placeholder="email@email.com">
         <label for="password" class="form-group">Введите пароль</label>
-        <input type="password" class="form-control" id="password">
+        <input type="password" class="form-control" id="password" placeholder="****">
         
         <div class="form-group mt-3">
         
@@ -49,9 +42,9 @@ class App {
 
         document.querySelector('#logIn').addEventListener('click', evt => {
             evt.preventDefault();
-            ads.authorization(emailEl.value,passwordEl.value,(data)=>{
+            ads.authorization(emailEl.value, passwordEl.value, (data) => {
                 console.log(data.id);
-                if(data.id === null){
+                if (data.id === null) {
                     const error = document.createElement('p');
                     error.innerHTML = `<p style="color: red">${data.response}</p>`;
                     this.rootEl.appendChild(error);
@@ -63,16 +56,16 @@ class App {
                         this.rootEl.removeChild(error)
                     });
                 }
-                if(data.id !== null){
+                if (data.id !== null) {
                     loading(this.rootEl);
-                    setTimeout(()=>{this.addNewAd(data)},500);
+                    setTimeout(() => {
+                        this.addNewAd(data)
+                    }, 500);
 
                 }
 
 
-
             });
-
 
 
         })
@@ -103,7 +96,7 @@ class App {
 
         document.getElementById('signIn').addEventListener('click', ev => {
             ev.preventDefault();
-console.log(name.value,password.value,tel.value,email.value);
+            console.log(name.value, password.value, tel.value, email.value);
             ads.addNewSeller(
                 name.value,
                 password.value,
@@ -112,7 +105,9 @@ console.log(name.value,password.value,tel.value,email.value);
                 (seller) => {
                     loading(this.rootEl);
                     console.log(seller);
-                    setTimeout(()=>{this.addNewAd(seller)},500)
+                    setTimeout(() => {
+                        this.addNewAd(seller)
+                    }, 500)
                 }
             );
             // console.log(seller);
@@ -211,7 +206,7 @@ console.log(name.value,password.value,tel.value,email.value);
             this.rootEl.textContent = '';
             this.rootEl.innerHTML = `
             <h3 class="">${o.brand} ${o.model}, ${o.year}</h3>
-            <img class="mt-3" width="100%" src=${o.photos[0]} alt=${o.brand}${o.model}${o.year}>
+            <img class="mt-3" width="100%" src=${o.photos[0]} alt=${o.brand}${o.model}${o.year} id="gallery">
             <table class="mt-3">
              <tr><td>Марка:</td><td>${o.brand}</td></tr>
             <tr><td>Модель:</td><td>${o.model}</td></tr>
@@ -229,6 +224,16 @@ console.log(name.value,password.value,tel.value,email.value);
             showPhone.addEventListener('click', () => {
                 showPhone.innerHTML = `<h4>${seller.phoneNumber}</h4>`;
                 showPhone.className = 'btn';
+            })
+            const gallery = document.getElementById('gallery');
+            let index = 0;
+            gallery.addEventListener('click', () => {
+                index++;
+                if (index === o.photos.length) {
+                    index = 0
+                }
+                gallery.src = o.photos[index];
+                console.log(index);
             })
         });
     }
@@ -355,7 +360,7 @@ console.log(name.value,password.value,tel.value,email.value);
 <!--                        the above input. It's a bit lighter and easily wraps to a new line.-->
 <!--                    </small>-->
                 </div>
-                <div id="photos"></div>
+                <div class="row" id="photos"></div>
 
                 <button id="continue" class="btn btn-primary float-right">Продолжить</button>
                 </form>
@@ -363,30 +368,56 @@ console.log(name.value,password.value,tel.value,email.value);
                 </div>
                 </div>
                 `;
+        const previews = [];
+
         const photosEl = document.querySelector('#photos');
         const inputEl = document.querySelector('#photo');
-        inputEl.addEventListener('change', () => {
+        const data = [];
+        inputEl.addEventListener('change', async () => {
             const file = inputEl.files[0];
-            console.log(file);
-            const img = new Image(100);
-            img.src = window.URL.createObjectURL(file);
-            img.onload = function () {
-                window.URL.revokeObjectURL(this.src);
-            };
+            // console.log(file);
+            previews.push(file);
+            photosEl.innerHTML ='';
+            previews.map((file,index)=>{
+                const img = new Image(100);
+                img.src = window.URL.createObjectURL(file);
+                img.onload = function () {
+                    window.URL.revokeObjectURL(this.src);
+                };
 
-            const photoEl = document.createElement('div');
-            photoEl.appendChild(img);
-            photoEl.className = 'm-1';
-            photosEl.appendChild(photoEl);
-            const removePhotoBtn = document.createElement("button");
-            removePhotoBtn.textContent = 'x';
-            removePhotoBtn.className = 'btn btn-sm btn-danger';
+                const photoEl = document.createElement('div');
+                photoEl.appendChild(img);
+                photoEl.className = 'm-1';
+                photosEl.appendChild(photoEl);
+                const removePhotoBtn = document.createElement("button");
+                removePhotoBtn.textContent = 'x';
+                removePhotoBtn.className = 'btn btn-sm btn-danger';
 
-            photoEl.appendChild(removePhotoBtn);
-            removePhotoBtn.addEventListener('click', ev => {
-                ev.preventDefault();
-                photosEl.removeChild(photoEl)
-            })
+                photoEl.appendChild(removePhotoBtn);
+                removePhotoBtn.addEventListener('click', ev => {
+                    ev.preventDefault();
+                    previews.splice(index,1);
+                    photosEl.removeChild(photoEl)
+                })
+            });
+            // console.log(data);
+
+
+            data.push(await readFile(file));
+            function readFile(blob) {
+                return new Promise((resolve, reject) => {
+                    const fileReader = new FileReader();
+                    fileReader.addEventListener('load', ev => {
+                        resolve(fileReader.result);
+                    });
+                    fileReader.addEventListener('error', ev => {
+                        reject('error');
+                    });
+                    fileReader.readAsDataURL(blob);
+                })
+            }
+
+
         });
 
         const brandEl = document.getElementById('brand');
@@ -407,8 +438,11 @@ console.log(name.value,password.value,tel.value,email.value);
             }
         });
 
-        document.getElementById('continue').addEventListener('click',(ev)=>{
+        document.getElementById('continue').addEventListener('click', (ev) => {
             ev.preventDefault();
+            // photosEl.querySelectorAll("img").forEach(img =>{
+            //     console.log(img.src);
+            // });
             const newAd = new Ad(
                 brandEl.value,
                 modelEl.value,
@@ -418,10 +452,12 @@ console.log(name.value,password.value,tel.value,email.value);
                 document.getElementById('text').value,
                 document.getElementById('price').value,
                 seller.id,
-                null
-            )
+                [...data]
+            );
             console.log(newAd);
-
+            this.ads.addNewItem(newAd, (item) => {
+                this.viewItem(item)
+            })
         })
     }
 }

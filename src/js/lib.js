@@ -36,7 +36,7 @@ export class Ads {
             this.sellers = JSON.parse(xhr.responseText);
             success(this.sellers);
         });
-        console.log('this.sellers', this.sellers);
+        // console.log('this.sellers', this.sellers);
         xhr.send();
     }
 

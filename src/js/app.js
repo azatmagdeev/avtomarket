@@ -224,10 +224,10 @@ class App {
             showPhone.addEventListener('click', () => {
                 showPhone.innerHTML = `<h4>${seller.phoneNumber}</h4>`;
                 showPhone.className = 'btn';
-            })
+            });
             const gallery = document.getElementById('gallery');
             let index = 0;
-            gallery.addEventListener('click', () => {
+            gallery.addEventListener('click' || 'touchstart', () => {
                 index++;
                 if (index === o.photos.length) {
                     index = 0
@@ -346,7 +346,7 @@ class App {
                     <textarea class="form-control" id="text" rows="4"></textarea>
                 </div>
                   <div class="form-group">
-                <label for="name">Как к Вам обращаться</label>
+                <label for="name">Ваше имя</label>
                 <input type="text" id="name" value="${seller.name}" disabled class="form-control">
                 </div>
                   <div class="form-group">
